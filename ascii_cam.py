@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 font = cv2.FONT_HERSHEY_SIMPLEX
 font_scale = 0.265
 font_color = (255, 255, 255)
@@ -27,7 +26,6 @@ image_width = int(image_height * aspect_ratio)
 pixels_per_char = window_height / image_height;
 half_pixels_per_char = pixels_per_char * 0.5
 
-
 density = ('Ñ','@','#','W','$','0','?','!','a','b','c',';',':','+','=','-',',','.','_',' ')
 density_length = len(density)
 
@@ -46,11 +44,11 @@ while True:
         for x in range(image_width):
             for y in range(image_height):
                 value = bnw[y][x]
-                char_index = round(np.multiply(np.subtract(1, np.divide(value, 255)), density_length-1))
-                org_x = round(np.add(np.multiply(x, pixels_per_char), pixels_per_char))
+                char_index = int((1 - (value / 255)) * density_length - 1)
+                org_x = int((x * pixels_per_char) + pixels_per_char)
                 if FLIP_IMAGE:
-                    org_x = np.subtract(window_width, org_x)
-                org_y = round(np.add(np.multiply(y, pixels_per_char), half_pixels_per_char))
+                    org_x = window_width - org_x
+                org_y = int((y * pixels_per_char) + half_pixels_per_char)
                 ascii_frame = cv2.putText(ascii_frame, density[char_index], (org_x, org_y), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
 
         cv2.imshow("ascii_window", ascii_frame)
